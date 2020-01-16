@@ -1,0 +1,14 @@
+System.out.println("X = " + m_stick.getX() + "Y = " + m_stick.getY());
+m_drive.arcadeDrive(m_stick.getY(), m_stick.getX());
+
+if (m_stick.getRawButton(3)) {
+    // Pull cube in when button 3 is held down
+    m_frontfront.set(-1.0);
+} else if (m_stick.getRawButton(4)) {
+    // Spit cube out when button 4 is held down
+    m_frontfront.set(1.0);
+} else {
+    // Stop motor when neither button is pressed
+    // (unless you want them running continually)
+    m_frontfront.set(0.0);
+}
