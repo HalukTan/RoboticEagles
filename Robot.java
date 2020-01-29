@@ -88,7 +88,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
   double power = -driverJoystick.getRawAxis(1);
-  double turn = driverJoystick.getRawAxis(4);
+  double turn = driverJoystick.getRawAxis(2);
   drive.arcadeDrive(power * 0.6, turn *0.6);
 
   }
