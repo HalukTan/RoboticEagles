@@ -9,6 +9,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.Watchdog;
+import edu.wpi.first.wpilibj.XboxController.Button;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import javax.swing.JButton;
 
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.Joystick;
@@ -18,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 
 /**
@@ -33,10 +39,13 @@ public class Robot extends TimedRobot {
   private PWMVictorSPX right2 = new PWMVictorSPX(2);
   private PWMVictorSPX left1 = new PWMVictorSPX(1);
   private PWMVictorSPX left2 = new PWMVictorSPX(3);
+  private VictorSP intake = new VictorSP(4);
   private SpeedControllerGroup right = new SpeedControllerGroup(right1, right2);
   private SpeedControllerGroup left = new SpeedControllerGroup(left1, left2);
   private Joystick driverJoystick = new Joystick(0);
   private DifferentialDrive drive = new DifferentialDrive(left, right);
+  private JoystickButton driverJButton = new JoystickButton(driverJoystick, 1);
+
 
   String m_autoSelected;
   SendableChooser auto_chooser;
@@ -87,9 +96,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+  System.out.println(-driverJoystick.getRawAxis(1));
   double power = -driverJoystick.getRawAxis(1);
   double turn = driverJoystick.getRawAxis(2);
-  drive.arcadeDrive(power * 0.6, turn *0.6);
+  double rollerPower = 0;
+  if (driverJoystick.getRawButton(1) == true) {
+    rollerPower = 0.2;
+  } else if (driverJoystick.getRawButton(2)) {
+    rollerPower = -0.2;
+  }
+  intake.set(rollerPower);
+  drive.arcadeDrive(power * 0.8, turn * 0.8);
 
   }
 
