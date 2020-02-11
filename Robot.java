@@ -9,13 +9,18 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.Watchdog;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import javax.swing.JButton;
 
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -24,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.Trigger;
 
 
 /**
@@ -36,16 +42,18 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 public class Robot extends TimedRobot {
   
   private PWMVictorSPX right1 = new PWMVictorSPX(0);
-  private PWMVictorSPX right2 = new PWMVictorSPX(2);
-  private PWMVictorSPX left1 = new PWMVictorSPX(1);
+  private PWMVictorSPX right2 = new PWMVictorSPX(1);
+  private PWMVictorSPX left1 = new PWMVictorSPX(2);
   private PWMVictorSPX left2 = new PWMVictorSPX(3);
-  private VictorSP intake = new VictorSP(4);
+  private VictorSP move = new VictorSP(4);
+  private PWMVictorSPX intake = new PWMVictorSPX(5);
+  private PWMVictorSPX elev = new PWMVictorSPX(6);
+  private Victor winch = new Victor(7);
   private SpeedControllerGroup right = new SpeedControllerGroup(right1, right2);
   private SpeedControllerGroup left = new SpeedControllerGroup(left1, left2);
-  private Joystick driverJoystick = new Joystick(0);
+  //private Joystick driverJoystick = new Joystick(0);
   private DifferentialDrive drive = new DifferentialDrive(left, right);
-  private JoystickButton driverJButton = new JoystickButton(driverJoystick, 1);
-
+  private XboxController xStick = new XboxController(0);
 
   String m_autoSelected;
   SendableChooser auto_chooser;
@@ -63,7 +71,9 @@ public class Robot extends TimedRobot {
   auto_chooser.addDefault("Default", new Integer(1));
   SmartDashboard.putData("Auto choices", auto_chooser);
   autoTimer = new Timer();
-
+  CameraServer server = CameraServer.getInstance();
+  server.startAutomaticCapture(1);
+  server.startAutomaticCapture(0);
   }
   
 
@@ -96,17 +106,37 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-  System.out.println(-driverJoystick.getRawAxis(1));
-  double power = -driverJoystick.getRawAxis(1);
-  double turn = driverJoystick.getRawAxis(2);
-  double rollerPower = 0;
-  if (driverJoystick.getRawButton(1) == true) {
-    rollerPower = 0.2;
-  } else if (driverJoystick.getRawButton(2)) {
-    rollerPower = -0.2;
+  System.out.println(-xStick.getRawAxis(1));
+  double power = -xStick.getRawAxis(1);
+  double turn = xStick.getRawAxis(4);
+  //double in = -xStick.getRawAxis(3);
+  //double out = xStick.getRawAxis(4);
+  double in = xStick.getTriggerAxis(Hand.kRight);
+  double out = xStick.getTriggerAxis(Hand.kLeft);
+  double rollerMove = 0;
+  double elevator = 0;
+  double winchh = 0;
+  if (xStick.getRawButton(1) == true) {
+    rollerMove = 0.8;
+  } else if (xStick.getRawButton(3)) {
+    rollerMove = -0.8;
   }
-  intake.set(rollerPower);
+  if (xStick.getRawButton(5) == true) {
+    elevator = 0.8;
+  } else if (xStick.getRawButton(6)) {
+    elevator = -0.8;
+  }
+  if (xStick.getRawButton(7) == true) {
+    winchh = 1.0;
+  } else if (xStick.getRawButton(8)) {
+    winchh = -1.0;
+  }
+  intake.set(in - out);
+  move.set(rollerMove);
+  elev.set(elevator);
+  winch.set(winchh);
   drive.arcadeDrive(power * 0.8, turn * 0.8);
+
 
   }
 
