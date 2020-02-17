@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -47,13 +48,16 @@ public class Robot extends TimedRobot {
   private PWMVictorSPX left2 = new PWMVictorSPX(3);
   private VictorSP move = new VictorSP(4);
   private PWMVictorSPX intake = new PWMVictorSPX(5);
-  private PWMVictorSPX elev = new PWMVictorSPX(6);
-  private Victor winch = new Victor(7);
+  private PWMVictorSPX winch = new PWMVictorSPX(6);
+  private Victor elev = new Victor(7);
   private SpeedControllerGroup right = new SpeedControllerGroup(right1, right2);
   private SpeedControllerGroup left = new SpeedControllerGroup(left1, left2);
   //private Joystick driverJoystick = new Joystick(0);
   private DifferentialDrive drive = new DifferentialDrive(left, right);
   private XboxController xStick = new XboxController(0);
+  
+    
+
 
   String m_autoSelected;
   SendableChooser auto_chooser;
@@ -74,6 +78,8 @@ public class Robot extends TimedRobot {
   CameraServer server = CameraServer.getInstance();
   server.startAutomaticCapture(1);
   server.startAutomaticCapture(0);
+  
+
   }
   
 
@@ -90,7 +96,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     switch (auto_choice) {
       case 1:
-        auto1();
+        forward();
         break;
       case 2:
         auto2();
@@ -122,9 +128,9 @@ public class Robot extends TimedRobot {
     rollerMove = -0.8;
   }
   if (xStick.getRawButton(5) == true) {
-    elevator = 0.8;
+    elevator = 0.6;
   } else if (xStick.getRawButton(6)) {
-    elevator = -0.8;
+    elevator = 0.6;
   }
   if (xStick.getRawButton(7) == true) {
     winchh = 1.0;
@@ -149,10 +155,10 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 
-  public void auto1()
+  public void forward()
   {
-  System.out.print("auto 1 running");
-    if(autoTimer.get() < 2)
+  System.out.print("forward running");
+    if(autoTimer.get() < 3)
     {
       left.set(-0.3);
       right.set(0.3);
