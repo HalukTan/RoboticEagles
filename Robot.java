@@ -48,14 +48,15 @@ public class Robot extends TimedRobot {
   private PWMVictorSPX left2 = new PWMVictorSPX(3);
   private VictorSP move = new VictorSP(4);
   private PWMVictorSPX intake = new PWMVictorSPX(5);
-  private PWMVictorSPX winch = new PWMVictorSPX(6);
-  private Victor elev = new Victor(7);
+  private PWMVictorSPX elev = new PWMVictorSPX(6);
+  private Victor winch = new Victor(7);
   private SpeedControllerGroup right = new SpeedControllerGroup(right1, right2);
   private SpeedControllerGroup left = new SpeedControllerGroup(left1, left2);
   //private Joystick driverJoystick = new Joystick(0);
   private DifferentialDrive drive = new DifferentialDrive(left, right);
   private XboxController xStick = new XboxController(0);
-  
+  DigitalInput forwardLimitSwitchDigitalInput, reverseLimitSwitchDigitalInput;
+  Talon motor;
     
 
 
@@ -78,6 +79,8 @@ public class Robot extends TimedRobot {
   CameraServer server = CameraServer.getInstance();
   server.startAutomaticCapture(1);
   server.startAutomaticCapture(0);
+  DigitalInput forwardLimitSwitchDigitalInput = new DigitalInput(1)
+  DigitalInput reverseLimitSwitchDigitalInput = new DigitalInput(2)
   
 
   }
@@ -128,9 +131,9 @@ public class Robot extends TimedRobot {
     rollerMove = -0.8;
   }
   if (xStick.getRawButton(5) == true) {
-    elevator = 0.6;
+    elevator = 0.8;
   } else if (xStick.getRawButton(6)) {
-    elevator = 0.6;
+    elevator = -0.8;
   }
   if (xStick.getRawButton(7) == true) {
     winchh = 1.0;
