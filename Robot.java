@@ -105,9 +105,7 @@ public class Robot extends TimedRobot {
       case 2:
         Right();
       case 3:
-        Forward();
-      case 4:
-        Example();
+        forward();
       default:
         break;
     }
@@ -173,7 +171,7 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 
-  public void Example()
+  public void forward()
   {
   System.out.print("forward running");
   if (autoTimer.get() > 0.1 && autoTimer.get() < 1.7)
@@ -188,70 +186,39 @@ public class Robot extends TimedRobot {
       autoTimer.stop();
     }
   }
- 
   public void Right()
   {
-    autoTimer.get();
-    move.set(0.5);
-    autoTimer.delay(0.2);
-    move.set(-0.5);
-    autoTimer.delay(0.2);
-    left.set(0.6);
-    right.set(0.6);
-    autoTimer.delay(1);
-    left.set(0);
-    right.set(0);
-    intake.set(1);
-    left.set(0.6);
-    right.set(-0.6);
-    autoTimer.delay(2);
-    left.set(0);
-    right.set(0);
-    left.set(0.5);
-    right.set(0.5);
+  System.out.print("Right running");
+  if (autoTimer.get() > 0.1 && autoTimer.get() < 2.0)
+    {
+      left.set(0.5);
+      right.set(-0.450);
+   
+    }else if(autoTimer.get() > 2.0 )
+    {
+      right.set(-0.2);
+      move.set(-0.4);
+      intake.set(-1);
+      autoTimer.stop();
+    }
   }
-  
-  public void Left()
-  {
-    autoTimer.get();
-    move.set(0.5);
-    autoTimer.delay(0.2);
-    move.set(-0.5);
-    autoTimer.delay(0.2);
-    left.set(0.6);
-    right.set(0.6);
-    autoTimer.delay(1);
-    left.set(0);
-    right.set(0);
-    intake.set(1);
-    left.set(-0.6);
-    right.set(0.6);
-    autoTimer.delay(2);
-    left.set(0);
-    right.set(0);
-    left.set(0.5);
-    right.set(0.5);
-  }  
-  public void Forward()
-  {
-    autoTimer.get();
-    move.set(0.5);
-    autoTimer.delay(0.2);
-    move.set(-0.5);
-    autoTimer.delay(0.2);
-    left.set(0.6);
-    right.set(0.6);
-    autoTimer.delay(1);
-    left.set(0);
-    right.set(0);
-    intake.set(1);
-    left.set(0.6);
-    right.set(0.6);
-    autoTimer.delay(2);
-    left.set(0);
-    right.set(0);
-    left.set(0.5);
-    right.set(0.5);
-  }  
+    public void Left()
+    {
+    System.out.print("Left running");
+    if (autoTimer.get() > 0.1 && autoTimer.get() < 2.0)
+      {
+        left.set(0.5);
+        right.set(-0.450);
+     
+      }else if(autoTimer.get() > 2.0 )
+      {
+        left.set(-0.2);
+        move.set(-0.4);
+        intake.set(-1);
+        autoTimer.stop();
+      }
+  }
  
 }
+  
+ 
